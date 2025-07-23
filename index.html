@@ -10,7 +10,19 @@
         :root {
             --level-2-color: #00ffff;
             --level-3-color: #ff00ff;
-            --level-4-color: #ffff00;
+            --level-function drawBoss() {
+    if (!boss) return;
+    ctx.save();
+    ctx.fillStyle = boss.color;
+    ctx.fillRect(boss.x - boss.width / 2, boss.y - boss.height / 2, boss.width, boss.height);
+
+    // HP bar
+    ctx.fillStyle = '#000';
+    ctx.fillRect(boss.x - 50, boss.y - boss.height / 2 - 15, 100, 10);
+    ctx.fillStyle = '#ff0040';
+    ctx.fillRect(boss.x - 50, boss.y - boss.height / 2 - 15, 100 * (boss.health / 100), 10);
+    ctx.restore();
+}4-color: #ffff00;
             --level-5-color: #ff6600;
             --neon-glow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
         }
@@ -20,7 +32,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+        if (boss) drawBoss();
         body {
             background: #0a0a0a;
             font-family: 'Orbitron', monospace;
@@ -721,7 +733,9 @@
             setTimeout(() => div.remove(), 2000);
         }
 
-        function update() {
+
+
+function update() {
             if (!gameRunning) return;
 
             if (joystickData.active) {
@@ -768,11 +782,15 @@
                 player.invulnerable = false;
             }
 
-            updateParticles();
+  
+
+    updateParticles();
             updateStars();
 
-            const spawnRate = Math.max(0.02 - player.level * 0.002, 0.01);
-            if (Math.random() < spawnRate) spawnEnemy();
+            const spawnRate = Math.max(0.02 - player.level * 0.002, 0.005);
+            for (let i = 0; i < player.level; i++) {
+        if (Math.random() < spawnRate) spawnEnemy();
+    }
         }
 
         function draw() {
@@ -783,6 +801,7 @@
                 bullets.forEach(drawBullet);
                 enemies.forEach(drawEnemy);
                 drawParticles();
+        
             }
         }
 
